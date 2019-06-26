@@ -135,3 +135,22 @@ func TestIsStringGreaterWithPatch(t *testing.T) {
 			versionA, versionB, got, want)
 	}
 }
+
+func TestGreaterVersion(t *testing.T) {
+	versions := []string{
+		"2.0.1",
+		"3.4.8",
+		"11.04.6",
+		"2.5.6",
+		"0.1.11",
+		"19.12.4",
+		"4.8.0",
+		"3.4.8",
+	}
+
+	var want = "19.12.4"
+
+	if got := GreaterVersion(versions); got != want {
+		t.Errorf("GreaterVersion() = %s, want %s", got, want)
+	}
+}
