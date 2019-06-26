@@ -1,2 +1,2 @@
 # semvercomp
-🆕 Semantic Versioning Comparison
+🆕 Semantic Version Comparison
