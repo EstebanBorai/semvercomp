@@ -36,7 +36,7 @@ func ParseStringToVersion(version string) Version {
 	}
 }
 
-// GetVersionString returns the string version of a Version struct
+// GetVersionString returns the string from a Version struct
 func GetVersionString(version Version) string {
 	return fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
 }
