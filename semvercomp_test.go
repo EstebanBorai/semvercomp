@@ -167,26 +167,11 @@ func TestIsStringGreater(t *testing.T) {
 		"0.37.1",
 	}
 
-	expected := []bool{
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-	}
-
 	for index := range versionsA {
 		expect := IsStringGreater(versionsA[index], versionsB[index])
 
-		if expect != expected[index] {
-			t.Errorf("IsStringGreater(%s, %s) = %t, want %t", versionsA[index], versionsB[index], expect, expected[index])
+		if expect != true {
+			t.Errorf("IsStringGreater(%s, %s) = %t, want %t", versionsA[index], versionsB[index], expect, true)
 		}
 	}
 }
