@@ -2,6 +2,7 @@ package semvercomp
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -17,6 +18,15 @@ type Version struct {
 	Patch int64
 }
 
+// cleanVersionString checks for extra characters in a version string
+// and removes them in order to parse the string to Version struct
+func cleanVersionString(versionString string) string {
+	re := regexp.MustCompile("(\\d|\\.\\d+)*$")
+	result := re.FindAllString(versionString, -1)[0]
+	return result
+}
+
+// parseTo64BitInteger shorthand for "strconv.ParseInt"
 func parseTo64BitInteger(numStr string) int64 {
 	if number, err := strconv.ParseInt(numStr, 10, 32); err == nil {
 		return number
@@ -27,7 +37,7 @@ func parseTo64BitInteger(numStr string) int64 {
 
 // ParseStringToVersion parses a semantic version string into a Version struct
 func ParseStringToVersion(version string) Version {
-	versionArray := strings.Split(version, ".")
+	versionArray := strings.Split(cleanVersionString(version), ".")
 
 	return Version{
 		Major: parseTo64BitInteger(versionArray[0]),
@@ -43,7 +53,7 @@ func GetVersionString(version Version) string {
 
 // IsSameVersion returns true if two versions are equal
 func IsSameVersion(versionA Version, versionB Version) bool {
-	if versionA.Major == versionB.Minor {
+	if versionA.Major == versionB.Major {
 		if versionA.Minor == versionB.Minor {
 			if versionA.Patch == versionB.Patch {
 				return true
@@ -59,9 +69,10 @@ func IsSameVersion(versionA Version, versionB Version) bool {
 }
 
 // IsGreater returns true if versionA is newer/greater than versionB
+// Note: if versions are equal returns true.
 func IsGreater(versionA Version, versionB Version) bool {
 	if IsSameVersion(versionA, versionB) {
-		return false
+		return true
 	}
 
 	if versionA.Major == versionB.Major {
@@ -88,6 +99,7 @@ func IsGreater(versionA Version, versionB Version) bool {
 }
 
 // IsStringGreater returns true if versionA is newer/greater than versionB
+// Note: if versions are equal returns true.
 func IsStringGreater(versionA string, versionB string) bool {
 	verA := ParseStringToVersion(versionA)
 	verB := ParseStringToVersion(versionB)

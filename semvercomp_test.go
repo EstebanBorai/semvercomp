@@ -136,21 +136,81 @@ func TestIsStringGreaterWithPatch(t *testing.T) {
 	}
 }
 
-func TestGreaterVersion(t *testing.T) {
-	versions := []string{
-		"2.0.1",
-		"3.4.8",
-		"11.04.6",
-		"2.5.6",
-		"0.1.11",
-		"19.12.4",
-		"4.8.0",
-		"3.4.8",
+func TestIsStringGreater(t *testing.T) {
+	versionsA := []string{
+		"2.0.0",
+		"V2.0.0",
+		"0.0.0",
+		"0.0.2",
+		"0.1.0",
+		"1.0.0",
+		"1.1.0",
+		"1.1.2",
+		"2.0.0",
+		"1.2.1",
+		"2.1.1",
+		"0.37.1",
 	}
 
-	var want = "19.12.4"
+	versionsB := []string{
+		"v1.0.0",
+		"1.0.0",
+		"0.0.0",
+		"0.0.1",
+		"0.0.9",
+		"1.0.0",
+		"1.1.0",
+		"1.1.2",
+		"1.1.1",
+		"1.1.1",
+		"1.1.1",
+		"0.37.1",
+	}
 
-	if got := GreaterVersion(versions); got != want {
-		t.Errorf("GreaterVersion() = %s, want %s", got, want)
+	expected := []bool{
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
+	}
+
+	for index := range versionsA {
+		expect := IsStringGreater(versionsA[index], versionsB[index])
+
+		if expect != expected[index] {
+			t.Errorf("IsStringGreater(%s, %s) = %t, want %t", versionsA[index], versionsB[index], expect, expected[index])
+		}
+	}
+}
+
+func TestCleanVersionString(t *testing.T) {
+	versions := [4]string{
+		"v1.0.0",
+		"V2.0.0",
+		"0.37.1",
+		"0.2.9999999999999999",
+	}
+
+	expected := [4]string{
+		"1.0.0",
+		"2.0.0",
+		"0.37.1",
+		"0.2.9999999999999999",
+	}
+
+	for index, version := range versions {
+		exp := cleanVersionString(version)
+
+		if exp != expected[index] {
+			t.Errorf("cleanVersionString(%s) = %s, want %s", version, exp, expected[index])
+		}
 	}
 }
