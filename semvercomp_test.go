@@ -50,10 +50,10 @@ func TestIsGreaterWithMajor(t *testing.T) {
 		Patch: 1,
 	}
 
-	want := true
+	want := Greater
 
 	if got := IsGreater(versionA, versionB); got != want {
-		t.Errorf("[Test Major Version] - IsGreater(%s, %s) = %t, want %t",
+		t.Errorf("[Test Major Version] - IsGreater(%s, %s) = %s, want %s",
 			GetVersionString(versionA), GetVersionString(versionB), got, want)
 	}
 }
@@ -71,10 +71,10 @@ func TestIsGreaterWithMinor(t *testing.T) {
 		Patch: 1,
 	}
 
-	want := true
+	want := Greater
 
 	if got := IsGreater(versionA, versionB); got != want {
-		t.Errorf("[Test Minor Version] - IsGreater(%s, %s) = %t, want %t",
+		t.Errorf("[Test Minor Version] - IsGreater(%s, %s) = %s, want %s",
 			GetVersionString(versionA), GetVersionString(versionB), got, want)
 	}
 }
@@ -92,10 +92,10 @@ func TestIsGreaterWithPatch(t *testing.T) {
 		Patch: 0,
 	}
 
-	want := true
+	want := Greater
 
 	if got := IsGreater(versionA, versionB); got != want {
-		t.Errorf("[Test Patch Version] - IsGreater(%s, %s) = %t, want %t",
+		t.Errorf("[Test Patch Version] - IsGreater(%s, %s) = %s, want %s",
 			GetVersionString(versionA), GetVersionString(versionB), got, want)
 	}
 }
@@ -104,10 +104,10 @@ func TestIsStringGreaterWithMajor(t *testing.T) {
 	var versionA = "2.0.0"
 	var versionB = "1.1.1"
 
-	want := true
+	want := Greater
 
 	if got := IsStringGreater(versionA, versionB); got != want {
-		t.Errorf("[String] [Test Major Version] - IsStringGreater(%s, %s) = %t, want %t",
+		t.Errorf("[String] [Test Major Version] - IsStringGreater(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
 }
@@ -116,10 +116,10 @@ func TestIsStringGreaterWithMinor(t *testing.T) {
 	var versionA = "1.3.1"
 	var versionB = "1.1.1"
 
-	want := true
+	want := Greater
 
 	if got := IsStringGreater(versionA, versionB); got != want {
-		t.Errorf("[String] [Test Minor Version] - IsStringGreater(%s, %s) = %t, want %t",
+		t.Errorf("[String] [Test Minor Version] - IsStringGreater(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
 }
@@ -128,50 +128,90 @@ func TestIsStringGreaterWithPatch(t *testing.T) {
 	var versionA = "1.1.3"
 	var versionB = "1.1.1"
 
-	want := true
+	want := Greater
 
 	if got := IsStringGreater(versionA, versionB); got != want {
-		t.Errorf("[String] [Test Patch Version] - IsStringGreater(%s, %s) = %t, want %t",
+		t.Errorf("[String] [Test Patch Version] - IsStringGreater(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
 }
 
 func TestIsStringGreater(t *testing.T) {
-	versionsA := []string{
-		"2.0.0",
-		"V2.0.0",
-		"0.0.0",
-		"0.0.2",
-		"0.1.0",
-		"1.0.0",
-		"1.1.0",
-		"1.1.2",
-		"2.0.0",
-		"1.2.1",
-		"2.1.1",
-		"0.37.1",
+	type ComparisonExpects struct {
+		versionA string
+		versionB string
+		expects  Relation
 	}
 
-	versionsB := []string{
-		"v1.0.0",
-		"1.0.0",
-		"0.0.0",
-		"0.0.1",
-		"0.0.9",
-		"1.0.0",
-		"1.1.0",
-		"1.1.2",
-		"1.1.1",
-		"1.1.1",
-		"1.1.1",
-		"0.37.1",
+	versions := []ComparisonExpects{
+		ComparisonExpects{
+			versionA: "2.0.0",
+			versionB: "v1.0.0",
+			expects:  Greater,
+		},
+		ComparisonExpects{
+			versionA: "V2.0.0",
+			versionB: "1.0.0",
+			expects:  Greater,
+		},
+		ComparisonExpects{
+			versionA: "0.0.0",
+			versionB: "0.0.0",
+			expects:  Equal,
+		},
+		ComparisonExpects{
+			versionA: "0.0.2",
+			versionB: "0.0.1",
+			expects:  Greater,
+		},
+		ComparisonExpects{
+			versionA: "0.1.0",
+			versionB: "0.0.9",
+			expects:  Greater,
+		},
+		ComparisonExpects{
+			versionA: "1.0.0",
+			versionB: "v1.0.0",
+			expects:  Equal,
+		},
+		ComparisonExpects{
+			versionA: "1.1.0",
+			versionB: "1.1.0",
+			expects:  Equal,
+		},
+		ComparisonExpects{
+			versionA: "1.1.2",
+			versionB: "1.1.2",
+			expects:  Equal,
+		},
+		ComparisonExpects{
+			versionA: "2.0.0",
+			versionB: "1.1.1",
+			expects:  Greater,
+		},
+		ComparisonExpects{
+			versionA: "1.1.2",
+			versionB: "1.2.1",
+			expects:  Lower,
+		},
+		ComparisonExpects{
+			versionA: "1.1.1",
+			versionB: "2.1.1",
+			expects:  Lower,
+		},
+		ComparisonExpects{
+			versionA: "0.37.1",
+			versionB: "0.37.1",
+			expects:  Equal,
+		},
 	}
 
-	for index := range versionsA {
-		expect := IsStringGreater(versionsA[index], versionsB[index])
+	for index := range versions {
+		current := versions[index]
+		result := IsStringGreater(current.versionA, current.versionB)
 
-		if expect != true {
-			t.Errorf("IsStringGreater(%s, %s) = %t, want %t", versionsA[index], versionsB[index], expect, true)
+		if result != current.expects {
+			t.Errorf("IsStringGreater(%s, %s) = %s, want %s", current.versionA, current.versionB, result, current.expects)
 		}
 	}
 }
