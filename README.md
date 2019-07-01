@@ -29,12 +29,18 @@ func main() {
 
 ## API
 
+- Structs and Constants
+	- [Version](https://github.com/estebanborai/semantic-version-comparison#version-struct)
+	- [Relation](https://github.com/estebanborai/semantic-version-comparison#relation-enumerable)
+- Parsing and Conversion
+	- 
+
 ### Structs and Constants
 
 #### `Version` Struct
 The `Version` struct represents the version number following `X.Y.Z` nomenclature
 Version Number | Name | Description
---- | --- | ---
+------------ | -------------
 `X` | `Major` | Version when you make incompatible API changes
 `Y` | `Minor` | Version when you add functionality in a backwards-compatible manner
 `Z` | `Patch` | Version when you make backwards-compatible bug fixes
@@ -63,8 +69,8 @@ Enum Key | Description | Sample
 
 ### Parsing and Conversion
 
-#### Parse a string to Version struct
-Parsing an string to a `Version` struct is possible using the `ParseStringToVersion` function, as follows:
+#### `ParseStringToVersion(version string) Version`
+ParseStringToVersion parses a semantic version string into a Version struct.
 
 ```go
 var ver string = "v1.4.11"
@@ -76,8 +82,8 @@ fmt.Println(version.Minor) // 4
 fmt.Println(version.Patch) // 11
 ```
 
-#### String representation of a `Version` struct
-Its possible to get the string of a `Version` struct using the `String` function.
+#### `String(version Version) string`
+String returns the string from a Version struct.
 
 ```go
 ver := semvercomp.Version{
@@ -141,7 +147,7 @@ fmt.Println(semvercomp.IsSameVersion(verb, vera)) // true
 ```
 
 #### `GreaterVersion(versions []string) string`
-`GreaterVersion` receives a slice of versions and returs the `Greater` version.
+`GreaterVersion` receives a slice of versions and returns the `Greater` version.
 
 ```go
 versions := []string{
