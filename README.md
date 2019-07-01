@@ -55,9 +55,9 @@ Source: [Semantic Versioning 2.0.0](https://semver.org/)
 
 ```go
 type Version struct {
-	Major int64
-	Minor int64
-	Patch int64
+  Major int64
+  Minor int64
+  Patch int64
 }
 ```
 
