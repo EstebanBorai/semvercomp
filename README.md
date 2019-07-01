@@ -33,7 +33,12 @@ func main() {
 	- [Version](https://github.com/estebanborai/semantic-version-comparison#version-struct)
 	- [Relation](https://github.com/estebanborai/semantic-version-comparison#relation-enumerable)
 - Parsing and Conversion
-	- 
+	- [ParseStringToVersion](https://github.com/estebanborai/semantic-version-comparison#parsestringtoversionversion-string-version)
+	- [String](https://github.com/estebanborai/semantic-version-comparison#stringversion-version-string)
+- Version Evaluation
+	- [Relationship and StrRelationship](https://github.com/estebanborai/semantic-version-comparison#relationshipversiona-version-versionb-version-relation)
+	- [IsSameVersion](https://github.com/estebanborai/semantic-version-comparison#issameversionversiona-version-versionb-version-bool)
+	- [GreaterVersion](https://github.com/estebanborai/semantic-version-comparison#greaterversionversions-string-string)
 
 ### Structs and Constants
 
@@ -41,7 +46,7 @@ func main() {
 The `Version` struct represents the version number following `X.Y.Z` nomenclature
 
 Version Number | Name | Description
------------- | -------------
+------------ | ------------- | -------------
 `X` | `Major` | Version when you make incompatible API changes
 `Y` | `Minor` | Version when you add functionality in a backwards-compatible manner
 `Z` | `Patch` | Version when you make backwards-compatible bug fixes
@@ -63,7 +68,7 @@ Let `verA` (stands for version A) and `verB` (stands for version B), be two vers
 where `verA` is `v1.1.0` version number, and `verB` is `0.1.0`.
 
 Enum Key | Description | Sample
---- | --- | ---
+------------ | ------------- | -------------
 `Greater` | Case where a version is greater than the another. | `verA` is `Greater` than `verB`
 `Lower` | Case when a version is lower than the other. | `verB` is `Lower` than `verA`
 `Equal` | Case when two versions are the same. | `v1.0.1` is `Equal` to `v1.0.1`
