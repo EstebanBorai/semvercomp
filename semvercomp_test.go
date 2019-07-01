@@ -100,43 +100,43 @@ func TestRelationshipWithPatch(t *testing.T) {
 	}
 }
 
-func TestIsStringGreaterWithMajor(t *testing.T) {
+func TestStrRelationshipWithMajor(t *testing.T) {
 	var versionA = "2.0.0"
 	var versionB = "1.1.1"
 
 	want := Greater
 
-	if got := IsStringGreater(versionA, versionB); got != want {
-		t.Errorf("[String] [Test Major Version] - IsStringGreater(%s, %s) = %s, want %s",
+	if got := StrRelationship(versionA, versionB); got != want {
+		t.Errorf("[String] [Test Major Version] - StrRelationship(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
 }
 
-func TestIsStringGreaterWithMinor(t *testing.T) {
+func TestStrRelationshipWithMinor(t *testing.T) {
 	var versionA = "1.3.1"
 	var versionB = "1.1.1"
 
 	want := Greater
 
-	if got := IsStringGreater(versionA, versionB); got != want {
-		t.Errorf("[String] [Test Minor Version] - IsStringGreater(%s, %s) = %s, want %s",
+	if got := StrRelationship(versionA, versionB); got != want {
+		t.Errorf("[String] [Test Minor Version] - StrRelationship(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
 }
 
-func TestIsStringGreaterWithPatch(t *testing.T) {
+func TestStrRelationshipWithPatch(t *testing.T) {
 	var versionA = "1.1.3"
 	var versionB = "1.1.1"
 
 	want := Greater
 
-	if got := IsStringGreater(versionA, versionB); got != want {
-		t.Errorf("[String] [Test Patch Version] - IsStringGreater(%s, %s) = %s, want %s",
+	if got := StrRelationship(versionA, versionB); got != want {
+		t.Errorf("[String] [Test Patch Version] - StrRelationship(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
 }
 
-func TestIsStringGreater(t *testing.T) {
+func TestStrRelationship(t *testing.T) {
 	type ComparisonExpects struct {
 		versionA string
 		versionB string
@@ -208,10 +208,10 @@ func TestIsStringGreater(t *testing.T) {
 
 	for index := range versions {
 		current := versions[index]
-		result := IsStringGreater(current.versionA, current.versionB)
+		result := StrRelationship(current.versionA, current.versionB)
 
 		if result != current.expects {
-			t.Errorf("IsStringGreater(%s, %s) = %s, want %s", current.versionA, current.versionB, result, current.expects)
+			t.Errorf("StrRelationship(%s, %s) = %s, want %s", current.versionA, current.versionB, result, current.expects)
 		}
 	}
 }
@@ -237,5 +237,23 @@ func TestCleanVersionString(t *testing.T) {
 		if exp != expected[index] {
 			t.Errorf("cleanVersionString(%s) = %s, want %s", version, exp, expected[index])
 		}
+	}
+}
+
+func TestGreaterVersion(t *testing.T) {
+	versions := []string{
+		"4.4.3",
+		"v8.12.4",
+		"0.1.0",
+		"7.3.3",
+		"4.67.31",
+	}
+
+	greaterVersion := GreaterVersion(versions)
+
+	var expect = "v8.12.4"
+
+	if expect != greaterVersion {
+		t.Errorf("GreaterVersion(versions) = %s, want %s", greaterVersion, expect)
 	}
 }

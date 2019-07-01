@@ -110,9 +110,8 @@ func Relationship(versionA Version, versionB Version) Relation {
 	return Lower
 }
 
-// IsStringGreater returns true if versionA is newer/greater than versionB
-// Note: if versions are equal returns true.
-func IsStringGreater(versionA string, versionB string) Relation {
+// StrRelationship returns the Relation between two versions as strings
+func StrRelationship(versionA string, versionB string) Relation {
 	verA := ParseStringToVersion(versionA)
 	verB := ParseStringToVersion(versionB)
 
@@ -124,7 +123,7 @@ func GreaterVersion(versions []string) string {
 	var greaterVersion = "0.0.0"
 
 	for _, version := range versions {
-		if IsStringGreater(version, greaterVersion) == Greater {
+		if StrRelationship(version, greaterVersion) == Greater {
 			greaterVersion = version
 		}
 	}

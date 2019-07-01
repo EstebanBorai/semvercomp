@@ -31,11 +31,13 @@ func main() {
 
 ### Structs and Constants
 
-#### Version Struct
-The `Version` struct represents the version number following X.Y.Z nomenclature
-- X (Major): Version when you make incompatible API changes
-- Y (Minor): Version when you add functionality in a backwards-compatible manner
-- Z (Patch): Version when you make backwards-compatible bug fixes
+#### `Version` Struct
+The `Version` struct represents the version number following `X.Y.Z` nomenclature
+Version Number | Name | Description
+--- | --- | ---
+`X` | `Major` | Version when you make incompatible API changes
+`Y` | `Minor` | Version when you add functionality in a backwards-compatible manner
+`Z` | `Patch` | Version when you make backwards-compatible bug fixes
 
 Source: [Semantic Versioning 2.0.0](https://semver.org/)
 
@@ -47,20 +49,17 @@ type Version struct {
 }
 ```
 
-#### Relation Enumerable
+#### `Relation` Enumerable
 Represents the different relationships between version numbers.
 
 Let `verA` (stands for version A) and `verB` (stands for version B), be two version numbers,
 where `verA` is `v1.1.0` version number, and `verB` is `0.1.0`.
 
-- `Greater`: Case where a version is greater than the another.
-	`verA` is `Greater` than `verB`.
-
-- `Lower`: Case when a version is lower than the other.
-	`verB` is `Lower` than `verA`
-
-- `Equal`: Case when two versions are the same:
-	`v1.0.1` is `Equal` to `v1.0.1`
+Enum Key | Description | Sample
+--- | --- | ---
+`Greater` | Case where a version is greater than the another. | `verA` is `Greater` than `verB`
+`Lower` | Case when a version is lower than the other. | `verB` is `Lower` than `verA`
+`Equal` | Case when two versions are the same. | `v1.0.1` is `Equal` to `v1.0.1`
 
 ### Parsing and Conversion
 
@@ -96,4 +95,64 @@ fmt.Println(versionString) // "3.9.0"
 `semvercomp` comes with a couple functions to help evaluate versions, either as `Version` structs or versions as strings.
 
 #### `Relationship(versionA Version, versionB Version) Relation`
-Evaluates the relationship between two versions based on `versionA`
+`Relationship` returns the `Relation` between two versions based in `versionA` as point of comparison.
+
+```go
+vera := semvercomp.Version{
+	Major: 1,
+	Minor: 2,
+	Patch: 8,
+}
+	
+verb := semvercomp.Version{
+	Major: 2,
+	Minor: 4,
+	Patch: 6,
+}
+		
+fmt.Println(string(semvercomp.Relationship(verb, vera))) // Greater
+```
+
+It's possible to get the `Relation` of two versions as strings using `StrRelationship` function.
+
+```go
+var vera, verb string = "v1.2.8", "2.4.6"
+		
+fmt.Println(string(semvercomp.StrRelationship(verb, vera))) // Greater
+```
+
+#### `IsSameVersion(versionA Version, versionB Version) bool`
+`IsSameVersion` evaluates if two versions are equal
+
+```go
+vera := semvercomp.Version{
+	Major: 1,
+	Minor: 1,
+	Patch: 1,
+}
+	
+verb := semvercomp.Version{
+	Major: 1,
+	Minor: 1,
+	Patch: 1,
+}
+		
+fmt.Println(semvercomp.IsSameVersion(verb, vera)) // true
+```
+
+#### `GreaterVersion(versions []string) string`
+`GreaterVersion` receives a slice of versions and returs the `Greater` version.
+
+```go
+versions := []string{
+	"4.4.3",
+	"v8.12.4",
+	"0.1.0",
+	"7.3.3",
+	"4.67.31",
+}
+
+greaterVersion := GreaterVersion(versions)
+
+fmt.Println(greaterVersion) // "v8.12.4"
+```
