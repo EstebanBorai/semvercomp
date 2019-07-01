@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestPrintVersion(t *testing.T) {
+func TestString(t *testing.T) {
 	var ver = Version{
 		Major: 1,
 		Minor: 0,
@@ -13,8 +13,8 @@ func TestPrintVersion(t *testing.T) {
 	}
 
 	want := "1.0.0"
-	if got := GetVersionString(ver); got != want {
-		t.Errorf("GetVersionString() = %s, want %s", got, want)
+	if got := String(ver); got != want {
+		t.Errorf("String() = %s, want %s", got, want)
 	}
 }
 
@@ -37,7 +37,7 @@ func TestParseStringToVersion(t *testing.T) {
 	}
 }
 
-func TestIsGreaterWithMajor(t *testing.T) {
+func TestRelationshipWithMajor(t *testing.T) {
 	var versionA = Version{
 		Major: 2,
 		Minor: 0,
@@ -52,13 +52,13 @@ func TestIsGreaterWithMajor(t *testing.T) {
 
 	want := Greater
 
-	if got := IsGreater(versionA, versionB); got != want {
-		t.Errorf("[Test Major Version] - IsGreater(%s, %s) = %s, want %s",
-			GetVersionString(versionA), GetVersionString(versionB), got, want)
+	if got := Relationship(versionA, versionB); got != want {
+		t.Errorf("[Test Major Version] - Relationship(%s, %s) = %s, want %s",
+			String(versionA), String(versionB), got, want)
 	}
 }
 
-func TestIsGreaterWithMinor(t *testing.T) {
+func TestRelationshipWithMinor(t *testing.T) {
 	var versionA = Version{
 		Major: 1,
 		Minor: 1,
@@ -73,13 +73,13 @@ func TestIsGreaterWithMinor(t *testing.T) {
 
 	want := Greater
 
-	if got := IsGreater(versionA, versionB); got != want {
-		t.Errorf("[Test Minor Version] - IsGreater(%s, %s) = %s, want %s",
-			GetVersionString(versionA), GetVersionString(versionB), got, want)
+	if got := Relationship(versionA, versionB); got != want {
+		t.Errorf("[Test Minor Version] - Relationship(%s, %s) = %s, want %s",
+			String(versionA), String(versionB), got, want)
 	}
 }
 
-func TestIsGreaterWithPatch(t *testing.T) {
+func TestRelationshipWithPatch(t *testing.T) {
 	var versionA = Version{
 		Major: 1,
 		Minor: 0,
@@ -94,9 +94,9 @@ func TestIsGreaterWithPatch(t *testing.T) {
 
 	want := Greater
 
-	if got := IsGreater(versionA, versionB); got != want {
-		t.Errorf("[Test Patch Version] - IsGreater(%s, %s) = %s, want %s",
-			GetVersionString(versionA), GetVersionString(versionB), got, want)
+	if got := Relationship(versionA, versionB); got != want {
+		t.Errorf("[Test Patch Version] - Relationship(%s, %s) = %s, want %s",
+			String(versionA), String(versionB), got, want)
 	}
 }
 
