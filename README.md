@@ -39,6 +39,7 @@ func main() {
 
 #### `Version` Struct
 The `Version` struct represents the version number following `X.Y.Z` nomenclature
+
 Version Number | Name | Description
 ------------ | -------------
 `X` | `Major` | Version when you make incompatible API changes
