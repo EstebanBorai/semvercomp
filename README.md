@@ -21,7 +21,7 @@ import (
 func main() {
 	var vera, verb string = "v1.0.1", "1.0.1"
 
-	if semvercomp.IsStringGreater(vera, verb) == semvercomp.Equal {
+	if semvercomp.StrRelationship(vera, verb) == semvercomp.Equal {
 		fmt.Printf("Versions %s and %s are equal\n", vera, verb)
 	}
 }
