@@ -1,4 +1,4 @@
-# semvercomp
+# semantic-version-comparison
 🆕 Tiny library to compare and process version numbers based on [semver](https://semver.org/) conventions.
 
 ## Installation
