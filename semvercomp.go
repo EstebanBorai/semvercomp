@@ -60,15 +60,15 @@ func ParseStringToVersion(version string) Version {
 }
 
 // String returns the string from a Version struct
-func String(version Version) string {
+func (version Version) String() string {
 	return fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
 }
 
 // IsSameVersion evaluates if two versions are equal
-func IsSameVersion(versionA Version, versionB Version) bool {
-	if versionA.Major == versionB.Major {
-		if versionA.Minor == versionB.Minor {
-			if versionA.Patch == versionB.Patch {
+func (version Version) IsSame(otherVersion Version) bool {
+	if version.Major == otherVersion.Major {
+		if version.Minor == otherVersion.Minor {
+			if version.Patch == otherVersion.Patch {
 				return true
 			}
 
@@ -82,28 +82,28 @@ func IsSameVersion(versionA Version, versionB Version) bool {
 }
 
 // Relationship returns the Relation between two versions based in versionA as point of comparison
-func Relationship(versionA Version, versionB Version) Relation {
-	if IsSameVersion(versionA, versionB) {
+func (version Version) Relationship(otherVersion Version) Relation {
+	if version.IsSame(otherVersion) {
 		return Equal
 	}
 
-	if versionA.Major == versionB.Major {
-		if versionA.Minor == versionB.Minor {
-			if versionA.Patch > versionB.Patch {
+	if version.Major == otherVersion.Major {
+		if version.Minor == otherVersion.Minor {
+			if version.Patch > otherVersion.Patch {
 				return Greater
 			}
 
 			return Lower
 		}
 
-		if versionA.Minor > versionB.Minor {
+		if version.Minor > otherVersion.Minor {
 			return Greater
 		}
 
 		return Lower
 	}
 
-	if versionA.Major > versionB.Major {
+	if version.Major > otherVersion.Major {
 		return Greater
 	}
 
@@ -115,7 +115,7 @@ func StrRelationship(versionA string, versionB string) Relation {
 	verA := ParseStringToVersion(versionA)
 	verB := ParseStringToVersion(versionB)
 
-	return Relationship(verA, verB)
+	return verA.Relationship(verB)
 }
 
 // GreaterVersion receives an slice of versions and returns the greater version

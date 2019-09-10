@@ -13,7 +13,7 @@ func TestString(t *testing.T) {
 	}
 
 	want := "1.0.0"
-	if got := String(ver); got != want {
+	if got := ver.String(); got != want {
 		t.Errorf("String() = %s, want %s", got, want)
 	}
 }
@@ -52,9 +52,9 @@ func TestRelationshipWithMajor(t *testing.T) {
 
 	want := Greater
 
-	if got := Relationship(versionA, versionB); got != want {
+	if got := versionA.Relationship(versionB); got != want {
 		t.Errorf("[Test Major Version] - Relationship(%s, %s) = %s, want %s",
-			String(versionA), String(versionB), got, want)
+			versionA.String(), versionB.String(), got, want)
 	}
 }
 
@@ -73,9 +73,9 @@ func TestRelationshipWithMinor(t *testing.T) {
 
 	want := Greater
 
-	if got := Relationship(versionA, versionB); got != want {
+	if got := versionA.Relationship(versionB); got != want {
 		t.Errorf("[Test Minor Version] - Relationship(%s, %s) = %s, want %s",
-			String(versionA), String(versionB), got, want)
+			versionA.String(), versionB.String(), got, want)
 	}
 }
 
@@ -94,9 +94,9 @@ func TestRelationshipWithPatch(t *testing.T) {
 
 	want := Greater
 
-	if got := Relationship(versionA, versionB); got != want {
+	if got := versionA.Relationship(versionB); got != want {
 		t.Errorf("[Test Patch Version] - Relationship(%s, %s) = %s, want %s",
-			String(versionA), String(versionB), got, want)
+			versionA.String(), versionB.String(), got, want)
 	}
 }
 
