@@ -34,7 +34,12 @@ const (
 // cleanVersionString checks for extra characters in a version string
 // and removes them in order to parse the string to Version struct
 func cleanVersionString(versionString string) string {
-	re := regexp.MustCompile("(\\d|\\.\\d+)*$")
+	var semverRegexp string
+	var re *regexp.Regexp
+
+	semverRegexp = `(v)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
+	re = regexp.MustCompile(semverRegexp)
+
 	result := re.FindAllString(versionString, -1)[0]
 	return result
 }
