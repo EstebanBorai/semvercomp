@@ -37,7 +37,7 @@ func cleanVersionString(versionString string) string {
 	var semverRegexp string
 	var re *regexp.Regexp
 
-	semverRegexp = `(v)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
+	semverRegexp = `(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
 	re = regexp.MustCompile(semverRegexp)
 
 	result := re.FindAllString(versionString, -1)[0]
@@ -54,14 +54,17 @@ func parseTo64BitInteger(numStr string) int64 {
 }
 
 // ParseStringToVersion parses a semantic version string into a Version struct
-func ParseStringToVersion(version string) Version {
+func ParseStringToVersion(version string) (Version, error) {
+	if !isValid(version) {
+		return Version{}, fmt.Errorf("provided tag (%s) is invalid", version)
+	}
 	versionArray := strings.Split(cleanVersionString(version), ".")
 
 	return Version{
 		Major: parseTo64BitInteger(versionArray[0]),
 		Minor: parseTo64BitInteger(versionArray[1]),
 		Patch: parseTo64BitInteger(versionArray[2]),
-	}
+	}, nil
 }
 
 // String returns the string from a Version struct
@@ -116,22 +119,37 @@ func (version Version) Relationship(otherVersion Version) Relation {
 }
 
 // StrRelationship returns the Relation between two versions as strings
-func StrRelationship(versionA string, versionB string) Relation {
-	verA := ParseStringToVersion(versionA)
-	verB := ParseStringToVersion(versionB)
-
-	return verA.Relationship(verB)
+func StrRelationship(versionA string, versionB string) (Relation, error) {
+	verA, err := ParseStringToVersion(versionA)
+	if err != nil {
+		return "", err
+	}
+	verB, err := ParseStringToVersion(versionB)
+	if err != nil {
+		return "", err
+	}
+	return verA.Relationship(verB), nil
 }
 
 // GreaterVersion receives an slice of versions and returns the greater version
-func GreaterVersion(versions []string) string {
+func GreaterVersion(versions []string) (string, error) {
 	var greaterVersion = "0.0.0"
 
 	for _, version := range versions {
-		if StrRelationship(version, greaterVersion) == Greater {
+		relation, err := StrRelationship(version, greaterVersion)
+		if err != nil {
+			return "", err
+		}
+		if relation == Greater {
 			greaterVersion = version
 		}
 	}
 
-	return greaterVersion
+	return greaterVersion, nil
+}
+
+//isValid() validates the version string
+func isValid(version string) bool {
+	pattern, _ := regexp.Compile(`(v)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`)
+	return pattern.MatchString(version)
 }

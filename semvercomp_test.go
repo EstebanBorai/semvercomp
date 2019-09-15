@@ -19,22 +19,33 @@ func TestString(t *testing.T) {
 }
 
 func TestParseStringToVersion(t *testing.T) {
-	var stringVersion = "0.1.12"
+	t.Run("Expect version struct to be constructed when the version string is valid", func(t *testing.T) {
+		var stringVersion = "0.1.12"
 
-	want := Version{
-		Major: 0,
-		Minor: 1,
-		Patch: 12,
-	}
+		want := Version{
+			Major: 0,
+			Minor: 1,
+			Patch: 12,
+		}
 
-	var got = ParseStringToVersion(stringVersion)
+		var got, _ = ParseStringToVersion(stringVersion)
 
-	var isEqual = reflect.DeepEqual(got, want)
+		var isEqual = reflect.DeepEqual(got, want)
 
-	if !isEqual {
-		t.Errorf("ParseStringToVersion(%s) = Version(Major: %d, Minor: %d, Patch: %d), want Version(Major: %d, Minor: %d, Patch: %d)",
-			stringVersion, got.Major, got.Minor, got.Patch, got.Major, got.Minor, got.Patch)
-	}
+		if !isEqual {
+			t.Errorf("ParseStringToVersion(%s) = Version(Major: %d, Minor: %d, Patch: %d), want Version(Major: %d, Minor: %d, Patch: %d)",
+				stringVersion, got.Major, got.Minor, got.Patch, got.Major, got.Minor, got.Patch)
+		}
+	})
+
+	t.Run("Expect error when version string is invalid", func(t *testing.T) {
+		var versionString = "1.0_alpha.1"
+		_, err := ParseStringToVersion(versionString)
+		if err == nil {
+			t.Errorf("Expected validation error")
+		}
+	})
+
 }
 
 func TestRelationshipWithMajor(t *testing.T) {
@@ -57,7 +68,6 @@ func TestRelationshipWithMajor(t *testing.T) {
 			versionA.String(), versionB.String(), got, want)
 	}
 }
-
 func TestRelationshipWithMinor(t *testing.T) {
 	var versionA = Version{
 		Major: 1,
@@ -106,7 +116,7 @@ func TestStrRelationshipWithMajor(t *testing.T) {
 
 	want := Greater
 
-	if got := StrRelationship(versionA, versionB); got != want {
+	if got, _ := StrRelationship(versionA, versionB); got != want {
 		t.Errorf("[String] [Test Major Version] - StrRelationship(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
@@ -118,7 +128,7 @@ func TestStrRelationshipWithMinor(t *testing.T) {
 
 	want := Greater
 
-	if got := StrRelationship(versionA, versionB); got != want {
+	if got, _ := StrRelationship(versionA, versionB); got != want {
 		t.Errorf("[String] [Test Minor Version] - StrRelationship(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
@@ -130,7 +140,7 @@ func TestStrRelationshipWithPatch(t *testing.T) {
 
 	want := Greater
 
-	if got := StrRelationship(versionA, versionB); got != want {
+	if got, _ := StrRelationship(versionA, versionB); got != want {
 		t.Errorf("[String] [Test Patch Version] - StrRelationship(%s, %s) = %s, want %s",
 			versionA, versionB, got, want)
 	}
@@ -208,7 +218,7 @@ func TestStrRelationship(t *testing.T) {
 
 	for index := range versions {
 		current := versions[index]
-		result := StrRelationship(current.versionA, current.versionB)
+		result, _ := StrRelationship(current.versionA, current.versionB)
 
 		if result != current.expects {
 			t.Errorf("StrRelationship(%s, %s) = %s, want %s", current.versionA, current.versionB, result, current.expects)
@@ -249,11 +259,34 @@ func TestGreaterVersion(t *testing.T) {
 		"4.67.31",
 	}
 
-	greaterVersion := GreaterVersion(versions)
+	greaterVersion, _ := GreaterVersion(versions)
 
 	var expect = "v8.12.4"
 
 	if expect != greaterVersion {
 		t.Errorf("GreaterVersion(versions) = %s, want %s", greaterVersion, expect)
+	}
+}
+
+func TestValidVersionString(t *testing.T) {
+	versions := []string{
+		"4.4.3",
+		"8",
+		"v2.3.0",
+		"0.1.0-alpha.0",
+		"1.0.0-alpha+001",
+	}
+	expected := [5]bool{
+		true,
+		false,
+		true,
+		true,
+		true,
+	}
+	for index, version := range versions {
+		isValid := isValid(version)
+		if expected[index] != isValid {
+			t.Errorf("isValid(%s)=%v,want %v", version, isValid, expected[index])
+		}
 	}
 }
