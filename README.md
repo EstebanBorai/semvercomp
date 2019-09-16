@@ -33,7 +33,7 @@ func main() {
 	- [Version](https://github.com/estebanborai/semantic-version-comparison#version-struct)
 	- [Relation](https://github.com/estebanborai/semantic-version-comparison#relation-enumerable)
 - Parsing and Conversion
-	- [NewVersionFromString](https://github.com/estebanborai/semantic-version-comparison#parsestringtoversionversion-string-version)
+	- [NewVersionFromString](https://github.com/estebanborai/semantic-version-comparison/tree/version/1.0.0#newversionfromstringversion-string-version)
 	- [String](https://github.com/estebanborai/semantic-version-comparison#stringversion-version-string)
 - Version Evaluation
 	- [Relationship and StrRelationship](https://github.com/estebanborai/semantic-version-comparison#relationshipversiona-version-versionb-version-relation)
