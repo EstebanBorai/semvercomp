@@ -53,8 +53,8 @@ func parseTo64BitInteger(numStr string) int64 {
 	panic(fmt.Sprintf("Unable to parse %s to int64.", numStr))
 }
 
-// ParseStringToVersion parses a semantic version string into a Version struct
-func ParseStringToVersion(version string) (Version, error) {
+// NewVersionFromString parses a semantic version string into a Version struct
+func NewVersionFromString(version string) (Version, error) {
 	if !isValid(version) {
 		return Version{}, fmt.Errorf("provided tag (%s) is invalid", version)
 	}
@@ -72,7 +72,7 @@ func (version Version) String() string {
 	return fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
 }
 
-// IsSameVersion evaluates if two versions are equal
+// IsSame evaluates if two versions are equal
 func (version Version) IsSame(otherVersion Version) bool {
 	if version.Major == otherVersion.Major {
 		if version.Minor == otherVersion.Minor {

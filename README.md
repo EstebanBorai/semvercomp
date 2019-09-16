@@ -33,7 +33,7 @@ func main() {
 	- [Version](https://github.com/estebanborai/semantic-version-comparison#version-struct)
 	- [Relation](https://github.com/estebanborai/semantic-version-comparison#relation-enumerable)
 - Parsing and Conversion
-	- [ParseStringToVersion](https://github.com/estebanborai/semantic-version-comparison#parsestringtoversionversion-string-version)
+	- [NewVersionFromString](https://github.com/estebanborai/semantic-version-comparison#parsestringtoversionversion-string-version)
 	- [String](https://github.com/estebanborai/semantic-version-comparison#stringversion-version-string)
 - Version Evaluation
 	- [Relationship and StrRelationship](https://github.com/estebanborai/semantic-version-comparison#relationshipversiona-version-versionb-version-relation)
@@ -98,7 +98,7 @@ ver := semvercomp.Version{
 	Patch: 0,
 }
 
-var versionString string = semvercomp.String(ver)
+var versionString string = ver.String()
 
 fmt.Println(versionString) // "3.9.0"
 ```
