@@ -18,7 +18,7 @@ func TestString(t *testing.T) {
 	}
 }
 
-func TestParseStringToVersion(t *testing.T) {
+func TestNewVersionFromString(t *testing.T) {
 	t.Run("Expect version struct to be constructed when the version string is valid", func(t *testing.T) {
 		var stringVersion = "0.1.12"
 
@@ -28,19 +28,19 @@ func TestParseStringToVersion(t *testing.T) {
 			Patch: 12,
 		}
 
-		var got, _ = ParseStringToVersion(stringVersion)
+		var got, _ = NewVersionFromString(stringVersion)
 
 		var isEqual = reflect.DeepEqual(got, want)
 
 		if !isEqual {
-			t.Errorf("ParseStringToVersion(%s) = Version(Major: %d, Minor: %d, Patch: %d), want Version(Major: %d, Minor: %d, Patch: %d)",
+			t.Errorf("NewVersionFromString(%s) = Version(Major: %d, Minor: %d, Patch: %d), want Version(Major: %d, Minor: %d, Patch: %d)",
 				stringVersion, got.Major, got.Minor, got.Patch, got.Major, got.Minor, got.Patch)
 		}
 	})
 
 	t.Run("Expect error when version string is invalid", func(t *testing.T) {
 		var versionString = "1.0_alpha.1"
-		_, err := ParseStringToVersion(versionString)
+		_, err := NewVersionFromString(versionString)
 		if err == nil {
 			t.Errorf("Expected validation error")
 		}

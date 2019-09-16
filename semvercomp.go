@@ -120,11 +120,11 @@ func (version Version) Relationship(otherVersion Version) Relation {
 
 // StrRelationship returns the Relation between two versions as strings
 func StrRelationship(versionA string, versionB string) (Relation, error) {
-	verA, err := ParseStringToVersion(versionA)
+	verA, err := NewVersionFromString(versionA)
 	if err != nil {
 		return "", err
 	}
-	verB, err := ParseStringToVersion(versionB)
+	verB, err := NewVersionFromString(versionB)
 	if err != nil {
 		return "", err
 	}

@@ -75,13 +75,13 @@ Enum Key | Description | Sample
 
 ### Parsing and Conversion
 
-#### `ParseStringToVersion(version string) Version`
-ParseStringToVersion parses a semantic version string into a Version struct.
+#### `NewVersionFromString(version string) Version`
+NewVersionFromString parses a semantic version string into a Version struct.
 
 ```go
 var ver string = "v1.4.11"
 	
-version := semvercomp.ParseStringToVersion(ver)
+version := semvercomp.NewVersionFromString(ver)
 	
 fmt.Println(version.Major) // 1
 fmt.Println(version.Minor) // 4
