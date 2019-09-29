@@ -11,11 +11,13 @@ import (
 // X (Major): Version when you make incompatible API changes
 // Y (Minor): Version when you add functionality in a backwards-compatible manner
 // Z (Patch): Version when you make backwards-compatible bug fixes
+// Prerelease: Version is unstable and might not satisfy the intended compatibility requirements
 // Source: Semantic Versioning 2.0.0 https://semver.org/
 type Version struct {
-	Major int64
-	Minor int64
-	Patch int64
+	Major      int64
+	Minor      int64
+	Patch      int64
+	PreRelease string
 }
 
 // Relation enumerates the different relationships between version numbers
@@ -58,12 +60,17 @@ func NewVersionFromString(version string) (Version, error) {
 	if !isValid(version) {
 		return Version{}, fmt.Errorf("provided tag (%s) is invalid", version)
 	}
-	versionArray := strings.Split(cleanVersionString(version), ".")
+	versionArray := regexp.MustCompile("[.\\-]").Split(cleanVersionString(version), -1)
 
+	var preRelease string
+	if strings.Contains(version, "-") {
+		preRelease = versionArray[3]
+	}
 	return Version{
-		Major: parseTo64BitInteger(versionArray[0]),
-		Minor: parseTo64BitInteger(versionArray[1]),
-		Patch: parseTo64BitInteger(versionArray[2]),
+		Major:      parseTo64BitInteger(versionArray[0]),
+		Minor:      parseTo64BitInteger(versionArray[1]),
+		Patch:      parseTo64BitInteger(versionArray[2]),
+		PreRelease: preRelease,
 	}, nil
 }
 
