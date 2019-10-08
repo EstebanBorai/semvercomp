@@ -2,6 +2,7 @@ package semvercomp
 
 import (
 	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -81,19 +82,7 @@ func (version Version) String() string {
 
 // IsSame evaluates if two versions are equal
 func (version Version) IsSame(otherVersion Version) bool {
-	if version.Major == otherVersion.Major {
-		if version.Minor == otherVersion.Minor {
-			if version.Patch == otherVersion.Patch {
-				return true
-			}
-
-			return false
-		}
-
-		return false
-	}
-
-	return false
+	return reflect.DeepEqual(version, otherVersion)
 }
 
 // Relationship returns the Relation between two versions based in versionA as point of comparison
