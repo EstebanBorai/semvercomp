@@ -77,7 +77,11 @@ func NewVersionFromString(version string) (Version, error) {
 
 // String returns the string from a Version struct
 func (version Version) String() string {
-	return fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
+	versionString := fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
+	if len(version.PreRelease) != 0 {
+		versionString += fmt.Sprintf("-%s", version.PreRelease)
+	}
+	return versionString
 }
 
 // IsSame evaluates if two versions are equal

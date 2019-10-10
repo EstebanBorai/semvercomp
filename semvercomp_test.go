@@ -6,16 +6,31 @@ import (
 )
 
 func TestString(t *testing.T) {
-	var ver = Version{
-		Major: 1,
-		Minor: 0,
-		Patch: 0,
-	}
+	t.Run("Expect version struct to be printed as a string in major.minor.patch format", func(t *testing.T) {
+		var ver = Version{
+			Major: 1,
+			Minor: 0,
+			Patch: 0,
+		}
 
-	want := "1.0.0"
-	if got := ver.String(); got != want {
-		t.Errorf("String() = %s, want %s", got, want)
-	}
+		want := "1.0.0"
+		if got := ver.String(); got != want {
+			t.Errorf("String() = %s, want %s", got, want)
+		}
+	})
+	t.Run("Expect version struct to be printed as a string in major.minor.patch-prerelease format", func(t *testing.T) {
+		var ver = Version{
+			Major:      1,
+			Minor:      0,
+			Patch:      0,
+			PreRelease: "alpha",
+		}
+
+		want := "1.0.0-alpha"
+		if got := ver.String(); got != want {
+			t.Errorf("String() = %s, want %s", got, want)
+		}
+	})
 }
 
 func TestNewVersionFromString(t *testing.T) {
