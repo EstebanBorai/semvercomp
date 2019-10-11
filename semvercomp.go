@@ -2,6 +2,7 @@ package semvercomp
 
 import (
 	"fmt"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -11,11 +12,13 @@ import (
 // X (Major): Version when you make incompatible API changes
 // Y (Minor): Version when you add functionality in a backwards-compatible manner
 // Z (Patch): Version when you make backwards-compatible bug fixes
+// Prerelease: Version is unstable and might not satisfy the intended compatibility requirements
 // Source: Semantic Versioning 2.0.0 https://semver.org/
 type Version struct {
-	Major int64
-	Minor int64
-	Patch int64
+	Major      int64
+	Minor      int64
+	Patch      int64
+	PreRelease string
 }
 
 // Relation enumerates the different relationships between version numbers
@@ -58,35 +61,32 @@ func NewVersionFromString(version string) (Version, error) {
 	if !isValid(version) {
 		return Version{}, fmt.Errorf("provided tag (%s) is invalid", version)
 	}
-	versionArray := strings.Split(cleanVersionString(version), ".")
+	versionArray := regexp.MustCompile("[.\\-]").Split(cleanVersionString(version), -1)
 
+	var preRelease string
+	if strings.Contains(version, "-") {
+		preRelease = versionArray[3]
+	}
 	return Version{
-		Major: parseTo64BitInteger(versionArray[0]),
-		Minor: parseTo64BitInteger(versionArray[1]),
-		Patch: parseTo64BitInteger(versionArray[2]),
+		Major:      parseTo64BitInteger(versionArray[0]),
+		Minor:      parseTo64BitInteger(versionArray[1]),
+		Patch:      parseTo64BitInteger(versionArray[2]),
+		PreRelease: preRelease,
 	}, nil
 }
 
 // String returns the string from a Version struct
 func (version Version) String() string {
-	return fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
+	versionString := fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
+	if len(version.PreRelease) != 0 {
+		versionString += fmt.Sprintf("-%s", version.PreRelease)
+	}
+	return versionString
 }
 
 // IsSame evaluates if two versions are equal
 func (version Version) IsSame(otherVersion Version) bool {
-	if version.Major == otherVersion.Major {
-		if version.Minor == otherVersion.Minor {
-			if version.Patch == otherVersion.Patch {
-				return true
-			}
-
-			return false
-		}
-
-		return false
-	}
-
-	return false
+	return reflect.DeepEqual(version, otherVersion)
 }
 
 // Relationship returns the Relation between two versions based in versionA as point of comparison

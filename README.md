@@ -50,6 +50,7 @@ Version Number | Name | Description
 `X` | `Major` | Version when you make incompatible API changes
 `Y` | `Minor` | Version when you add functionality in a backwards-compatible manner
 `Z` | `Patch` | Version when you make backwards-compatible bug fixes
+ `pr`| `PreRelease` | Version when you make backwards-compatible bug fixes
 
 Source: [Semantic Versioning 2.0.0](https://semver.org/)
 
@@ -58,6 +59,7 @@ type Version struct {
   Major int64
   Minor int64
   Patch int64
+  PreRelease string
 }
 ```
 
@@ -79,13 +81,14 @@ Enum Key | Description | Sample
 NewVersionFromString parses a semantic version string into a Version struct.
 
 ```go
-var ver string = "v1.4.11"
+var ver string = "v1.4.11-alpha"
 	
 version := semvercomp.NewVersionFromString(ver)
 	
 fmt.Println(version.Major) // 1
 fmt.Println(version.Minor) // 4
 fmt.Println(version.Patch) // 11
+fmt.Println(version.PreRelease) // alpha
 ```
 
 #### `String(version Version) string`
@@ -96,11 +99,12 @@ ver := semvercomp.Version{
 	Major: 3,
 	Minor: 9,
 	Patch: 0,
+    PreRelease: alpha.beta
 }
 
 var versionString string = ver.String()
 
-fmt.Println(versionString) // "3.9.0"
+fmt.Println(versionString) // "3.9.0-alpha.beta"
 ```
 
 ### Version Evaluation

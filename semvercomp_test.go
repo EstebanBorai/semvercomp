@@ -6,35 +6,67 @@ import (
 )
 
 func TestString(t *testing.T) {
-	var ver = Version{
-		Major: 1,
-		Minor: 0,
-		Patch: 0,
-	}
+	t.Run("Expect version struct to be printed as a string in major.minor.patch format", func(t *testing.T) {
+		var ver = Version{
+			Major: 1,
+			Minor: 0,
+			Patch: 0,
+		}
 
-	want := "1.0.0"
-	if got := ver.String(); got != want {
-		t.Errorf("String() = %s, want %s", got, want)
-	}
+		want := "1.0.0"
+		if got := ver.String(); got != want {
+			t.Errorf("String() = %s, want %s", got, want)
+		}
+	})
+	t.Run("Expect version struct to be printed as a string in major.minor.patch-prerelease format", func(t *testing.T) {
+		var ver = Version{
+			Major:      1,
+			Minor:      0,
+			Patch:      0,
+			PreRelease: "alpha",
+		}
+
+		want := "1.0.0-alpha"
+		if got := ver.String(); got != want {
+			t.Errorf("String() = %s, want %s", got, want)
+		}
+	})
 }
 
 func TestNewVersionFromString(t *testing.T) {
 	t.Run("Expect version struct to be constructed when the version string is valid", func(t *testing.T) {
-		var stringVersion = "0.1.12"
 
-		want := Version{
-			Major: 0,
-			Minor: 1,
-			Patch: 12,
+		type ExpectedVersion struct {
+			versionString string
+			want          Version
 		}
 
-		var got, _ = NewVersionFromString(stringVersion)
-
-		var isEqual = reflect.DeepEqual(got, want)
-
-		if !isEqual {
-			t.Errorf("NewVersionFromString(%s) = Version(Major: %d, Minor: %d, Patch: %d), want Version(Major: %d, Minor: %d, Patch: %d)",
-				stringVersion, got.Major, got.Minor, got.Patch, got.Major, got.Minor, got.Patch)
+		versions := []ExpectedVersion{
+			{
+				versionString: "0.1.12",
+				want: Version{
+					Major: 0,
+					Minor: 1,
+					Patch: 12,
+				},
+			},
+			{
+				versionString: "0.1.12-alpha",
+				want: Version{
+					Major:      0,
+					Minor:      1,
+					Patch:      12,
+					PreRelease: "alpha",
+				},
+			},
+		}
+		for index := range versions {
+			current := versions[index]
+			got, _ := NewVersionFromString(current.versionString)
+			if !reflect.DeepEqual(got, current.want) {
+				t.Errorf("NewVersionFromString(%s) = Version(Major: %d, Minor: %d, Patch: %d), want Version(Major: %d, Minor: %d, Patch: %d)",
+					current.versionString, got.Major, got.Minor, got.Patch, got.Major, got.Minor, got.Patch)
+			}
 		}
 	})
 
@@ -154,64 +186,69 @@ func TestStrRelationship(t *testing.T) {
 	}
 
 	versions := []ComparisonExpects{
-		ComparisonExpects{
+		{
 			versionA: "2.0.0",
 			versionB: "v1.0.0",
 			expects:  Greater,
 		},
-		ComparisonExpects{
+		{
 			versionA: "V2.0.0",
 			versionB: "1.0.0",
 			expects:  Greater,
 		},
-		ComparisonExpects{
+		{
 			versionA: "0.0.0",
 			versionB: "0.0.0",
 			expects:  Equal,
 		},
-		ComparisonExpects{
+		{
 			versionA: "0.0.2",
 			versionB: "0.0.1",
 			expects:  Greater,
 		},
-		ComparisonExpects{
+		{
 			versionA: "0.1.0",
 			versionB: "0.0.9",
 			expects:  Greater,
 		},
-		ComparisonExpects{
+		{
 			versionA: "1.0.0",
 			versionB: "v1.0.0",
 			expects:  Equal,
 		},
-		ComparisonExpects{
+		{
 			versionA: "1.1.0",
 			versionB: "1.1.0",
 			expects:  Equal,
 		},
-		ComparisonExpects{
+		{
 			versionA: "1.1.2",
 			versionB: "1.1.2",
 			expects:  Equal,
 		},
-		ComparisonExpects{
+		{
 			versionA: "2.0.0",
 			versionB: "1.1.1",
 			expects:  Greater,
 		},
-		ComparisonExpects{
+		{
 			versionA: "1.1.2",
 			versionB: "1.2.1",
 			expects:  Lower,
 		},
-		ComparisonExpects{
+		{
 			versionA: "1.1.1",
 			versionB: "2.1.1",
 			expects:  Lower,
 		},
-		ComparisonExpects{
+		{
 			versionA: "0.37.1",
 			versionB: "0.37.1",
+			expects:  Equal,
+		},
+		{
+			versionA: "1.2.2-alpha",
+			versionB: "1.2.2-alpha",
 			expects:  Equal,
 		},
 	}
@@ -227,18 +264,20 @@ func TestStrRelationship(t *testing.T) {
 }
 
 func TestCleanVersionString(t *testing.T) {
-	versions := [4]string{
+	versions := [5]string{
 		"v1.0.0",
 		"V2.0.0",
 		"0.37.1",
 		"0.2.9999999999999999",
+		"v1.2.0-alpha",
 	}
 
-	expected := [4]string{
+	expected := [5]string{
 		"1.0.0",
 		"2.0.0",
 		"0.37.1",
 		"0.2.9999999999999999",
+		"1.2.0-alpha",
 	}
 
 	for index, version := range versions {
