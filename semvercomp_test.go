@@ -311,14 +311,18 @@ func TestValidVersionString(t *testing.T) {
 	versions := []string{
 		"4.4.3",
 		"8",
+		"A1.2.3",
 		"v2.3.0",
+		"V2.3.0",
 		"0.1.0-alpha.0",
 		"1.0.0-alpha+001",
 	}
-	expected := [5]bool{
+	expected := [7]bool{
 		true,
 		false,
+		false,
 		true,
+		false,
 		true,
 		true,
 	}
