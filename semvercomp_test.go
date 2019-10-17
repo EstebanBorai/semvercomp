@@ -192,7 +192,7 @@ func TestStrRelationship(t *testing.T) {
 			expects:  Greater,
 		},
 		{
-			versionA: "V2.0.0",
+			versionA: "v2.0.0",
 			versionB: "1.0.0",
 			expects:  Greater,
 		},
@@ -264,26 +264,22 @@ func TestStrRelationship(t *testing.T) {
 }
 
 func TestCleanVersionString(t *testing.T) {
-	versions := [5]string{
+	versions := [3]string{
 		"v1.0.0",
-		"V2.0.0",
 		"0.37.1",
-		"0.2.9999999999999999",
 		"v1.2.0-alpha",
 	}
 
-	expected := [5]string{
-		"1.0.0",
-		"2.0.0",
-		"0.37.1",
-		"0.2.9999999999999999",
-		"1.2.0-alpha",
+	expected := [3]map[string]string{
+		{"major": "1", "minor": "0", "patch": "0", "buildmetadata": "", "prerelease": ""},
+		{"major": "0", "minor": "37", "patch": "1", "buildmetadata": "", "prerelease": ""},
+		{"major": "1", "minor": "2", "patch": "0", "prerelease": "alpha", "buildmetadata": ""},
 	}
 
 	for index, version := range versions {
 		exp := cleanVersionString(version)
 
-		if exp != expected[index] {
+		if !reflect.DeepEqual(exp, expected[index]) {
 			t.Errorf("cleanVersionString(%s) = %s, want %s", version, exp, expected[index])
 		}
 	}

@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 // Version represents the version number following X.Y.Z nomenclature
@@ -32,19 +31,26 @@ const (
 
 	// Equal describes the case when two versions are the same
 	Equal Relation = "Equal"
+
+	SemverRegexp string = `^v?(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
 )
 
 // cleanVersionString checks for extra characters in a version string
 // and removes them in order to parse the string to Version struct
-func cleanVersionString(versionString string) string {
-	var semverRegexp string
+func cleanVersionString(versionString string) map[string]string {
 	var re *regexp.Regexp
 
-	semverRegexp = `(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
-	re = regexp.MustCompile(semverRegexp)
+	re = regexp.MustCompile(SemverRegexp)
 
-	result := re.FindAllString(versionString, -1)[0]
-	return result
+	result := re.FindStringSubmatch(versionString)
+	versionFields := make(map[string]string)
+
+	for index, member := range re.SubexpNames() {
+		if index != 0 && member != "" {
+			versionFields[member] = result[index]
+		}
+	}
+	return versionFields
 }
 
 // parseTo64BitInteger shorthand for "strconv.ParseInt"
@@ -61,17 +67,14 @@ func NewVersionFromString(version string) (Version, error) {
 	if !isValid(version) {
 		return Version{}, fmt.Errorf("provided tag (%s) is invalid", version)
 	}
-	versionArray := regexp.MustCompile("[.\\-]").Split(cleanVersionString(version), -1)
 
-	var preRelease string
-	if strings.Contains(version, "-") {
-		preRelease = versionArray[3]
-	}
+	versionMap := cleanVersionString(version)
+
 	return Version{
-		Major:      parseTo64BitInteger(versionArray[0]),
-		Minor:      parseTo64BitInteger(versionArray[1]),
-		Patch:      parseTo64BitInteger(versionArray[2]),
-		PreRelease: preRelease,
+		Major:      parseTo64BitInteger(versionMap["major"]),
+		Minor:      parseTo64BitInteger(versionMap["minor"]),
+		Patch:      parseTo64BitInteger(versionMap["patch"]),
+		PreRelease: versionMap["prerelease"],
 	}, nil
 }
 
@@ -150,6 +153,6 @@ func GreaterVersion(versions []string) (string, error) {
 
 //isValid() validates the version string
 func isValid(version string) bool {
-	pattern, _ := regexp.Compile(`^v?(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`)
+	pattern, _ := regexp.Compile(SemverRegexp)
 	return pattern.MatchString(version)
 }
