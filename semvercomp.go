@@ -18,6 +18,7 @@ type Version struct {
 	Minor      int64
 	Patch      int64
 	PreRelease string
+	BuildMetaData string
 }
 
 // Relation enumerates the different relationships between version numbers
@@ -75,6 +76,7 @@ func NewVersionFromString(version string) (Version, error) {
 		Minor:      parseTo64BitInteger(versionMap["minor"]),
 		Patch:      parseTo64BitInteger(versionMap["patch"]),
 		PreRelease: versionMap["prerelease"],
+		BuildMetaData: versionMap["buildmetadata"],
 	}, nil
 }
 
@@ -83,6 +85,9 @@ func (version Version) String() string {
 	versionString := fmt.Sprintf("%d.%d.%d", version.Major, version.Minor, version.Patch)
 	if len(version.PreRelease) != 0 {
 		versionString += fmt.Sprintf("-%s", version.PreRelease)
+	}
+	if len(version.BuildMetaData)!=0{
+		versionString += fmt.Sprintf("+%s", version.BuildMetaData)
 	}
 	return versionString
 }

@@ -31,6 +31,21 @@ func TestString(t *testing.T) {
 			t.Errorf("String() = %s, want %s", got, want)
 		}
 	})
+
+	t.Run("Expect version struct to be printed as a string in major.minor.patch-prerelease+buildmetadata format", func(t *testing.T) {
+		var ver = Version{
+			Major:      1,
+			Minor:      0,
+			Patch:      0,
+			PreRelease: "alpha",
+			BuildMetaData: "001",
+		}
+
+		want := "1.0.0-alpha+001"
+		if got := ver.String(); got != want {
+			t.Errorf("String() = %s, want %s", got, want)
+		}
+	})
 }
 
 func TestNewVersionFromString(t *testing.T) {
@@ -251,6 +266,11 @@ func TestStrRelationship(t *testing.T) {
 			versionB: "1.2.2-alpha",
 			expects:  Equal,
 		},
+		{
+			versionA: "1.2.2-alpha+001",
+			versionB: "1.2.2-alpha+001",
+			expects:  Equal,
+		},
 	}
 
 	for index := range versions {
@@ -264,16 +284,18 @@ func TestStrRelationship(t *testing.T) {
 }
 
 func TestCleanVersionString(t *testing.T) {
-	versions := [3]string{
+	versions := [4]string{
 		"v1.0.0",
 		"0.37.1",
 		"v1.2.0-alpha",
+		"v1.2.0-alpha+001",
 	}
 
-	expected := [3]map[string]string{
+	expected := [4]map[string]string{
 		{"major": "1", "minor": "0", "patch": "0", "buildmetadata": "", "prerelease": ""},
 		{"major": "0", "minor": "37", "patch": "1", "buildmetadata": "", "prerelease": ""},
 		{"major": "1", "minor": "2", "patch": "0", "prerelease": "alpha", "buildmetadata": ""},
+		{"major": "1", "minor": "2", "patch": "0", "prerelease": "alpha", "buildmetadata": "001"},
 	}
 
 	for index, version := range versions {
