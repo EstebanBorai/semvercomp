@@ -50,17 +50,17 @@ Version Number | Name | Description
 `X` | `Major` | Version when you make incompatible API changes
 `Y` | `Minor` | Version when you add functionality in a backwards-compatible manner
 `Z` | `Patch` | Version when you make backwards-compatible bug fixes
- `pr`| `PreRelease` | Version when you make backwards-compatible bug fixes
-  `build metadata`| `BuildMetaData` | Contains additional information about the version
+`pr`| `PreRelease` | Version when you make backwards-compatible bug fixes
+`md`| `BuildMetaData` | Contains additional information about the version
 
 Source: [Semantic Versioning 2.0.0](https://semver.org/)
 
 ```go
 type Version struct {
-  Major int64
-  Minor int64
-  Patch int64
-  PreRelease string
+  Major         int64
+  Minor         int64
+  Patch         int64
+  PreRelease    string
   BuildMetaData string
 }
 ```

@@ -14,10 +14,10 @@ import (
 // Prerelease: Version is unstable and might not satisfy the intended compatibility requirements
 // Source: Semantic Versioning 2.0.0 https://semver.org/
 type Version struct {
-	Major      int64
-	Minor      int64
-	Patch      int64
-	PreRelease string
+	Major         int64
+	Minor         int64
+	Patch         int64
+	PreRelease    string
 	BuildMetaData string
 }
 
@@ -72,10 +72,10 @@ func NewVersionFromString(version string) (Version, error) {
 	versionMap := cleanVersionString(version)
 
 	return Version{
-		Major:      parseTo64BitInteger(versionMap["major"]),
-		Minor:      parseTo64BitInteger(versionMap["minor"]),
-		Patch:      parseTo64BitInteger(versionMap["patch"]),
-		PreRelease: versionMap["prerelease"],
+		Major:         parseTo64BitInteger(versionMap["major"]),
+		Minor:         parseTo64BitInteger(versionMap["minor"]),
+		Patch:         parseTo64BitInteger(versionMap["patch"]),
+		PreRelease:    versionMap["prerelease"],
 		BuildMetaData: versionMap["buildmetadata"],
 	}, nil
 }
@@ -86,7 +86,7 @@ func (version Version) String() string {
 	if len(version.PreRelease) != 0 {
 		versionString += fmt.Sprintf("-%s", version.PreRelease)
 	}
-	if len(version.BuildMetaData)!=0{
+	if len(version.BuildMetaData) != 0 {
 		versionString += fmt.Sprintf("+%s", version.BuildMetaData)
 	}
 	return versionString
