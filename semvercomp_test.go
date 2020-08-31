@@ -115,6 +115,7 @@ func TestRelationshipWithMajor(t *testing.T) {
 			versionA.String(), versionB.String(), got, want)
 	}
 }
+
 func TestRelationshipWithMinor(t *testing.T) {
 	var versionA = Version{
 		Major: 1,

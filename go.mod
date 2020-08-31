@@ -1,3 +1,3 @@
-module github.com/estebanborai/semantic-version-comparison
+module github.com/EstebanBorai/semvercomp
 
-go 1.12
+go 1.14

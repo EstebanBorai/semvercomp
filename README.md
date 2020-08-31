@@ -1,9 +1,15 @@
-# semantic-version-comparison
-🆕 Tiny library to compare and process version numbers based on [semver](https://semver.org/) conventions.
+<div>
+  <div align="center" style="display: block; text-align: center;">
+    <img src="https://via.placeholder.com/120" height="120" width="120" />
+  </div>
+  <h1 align="center">semvercomp</h1>
+  <h4 align="center">Tiny library to compare and process version numbers based on https://semver.org/ conventions.</h4>
+</div>
 
 ## Installation
+
 ```go
-go get github.com/estebanborai/semantic-version-comparison
+go get github.com/EstebanBorai/semvercomp
 ```
 
 ## Usage
@@ -15,7 +21,7 @@ package main
 
 import (
 	"fmt"
-	semvercomp "github.com/estebanborai/semantic-version-comparison"
+	"github.com/EstebanBorai/semvercomp"
 )
 
 func main() {
@@ -30,15 +36,15 @@ func main() {
 ## API
 
 - Structs and Constants
-	- [Version](https://github.com/estebanborai/semantic-version-comparison#version-struct)
-	- [Relation](https://github.com/estebanborai/semantic-version-comparison#relation-enumerable)
+	- [Version](https://github.com/EstebanBorai/semvercomp#version-struct)
+	- [Relation](https://github.com/EstebanBorai/semvercomp#relation-enumerable)
 - Parsing and Conversion
-	- [NewVersionFromString](https://github.com/estebanborai/semantic-version-comparison/tree/version/1.0.0#newversionfromstringversion-string-version)
-	- [String](https://github.com/estebanborai/semantic-version-comparison#stringversion-version-string)
+	- [NewVersionFromString](https://github.com/EstebanBorai/semvercomp/tree/version/1.0.0#newversionfromstringversion-string-version)
+	- [String](https://github.com/EstebanBorai/semvercomp#stringversion-version-string)
 - Version Evaluation
-	- [Relationship and StrRelationship](https://github.com/estebanborai/semantic-version-comparison#relationshipversiona-version-versionb-version-relation)
-	- [IsSameVersion](https://github.com/estebanborai/semantic-version-comparison#issameversionversiona-version-versionb-version-bool)
-	- [GreaterVersion](https://github.com/estebanborai/semantic-version-comparison#greaterversionversions-string-string)
+	- [Relationship and StrRelationship](https://github.com/EstebanBorai/semvercomp#relationshipversiona-version-versionb-version-relation)
+	- [IsSameVersion](https://github.com/EstebanBorai/semvercomp#issameversionversiona-version-versionb-version-bool)
+	- [GreaterVersion](https://github.com/EstebanBorai/semvercomp#greaterversionversions-string-string)
 
 ### Structs and Constants
 
@@ -176,3 +182,12 @@ greaterVersion := GreaterVersion(versions)
 
 fmt.Println(greaterVersion) // "v8.12.4"
 ```
+
+## Contributors
+
+- [EstebanBorai](https://github.com/EstebanBorai/)
+- [sowmiyamuthuraman](https://github.com/sowmiyamuthuraman/)
+
+## License
+
+Licensed under the MIT License
